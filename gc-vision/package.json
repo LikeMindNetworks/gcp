@@ -1,0 +1,15 @@
+{
+  "name": "gc-vision",
+  "version": "0.1.0",
+  "description": "Image processing with Google Cloud Vision API on Cloud Function",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "LikeMindNetworks",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@google-cloud/pubsub": "^0.13.0",
+    "@google-cloud/vision": "^0.11.3"
+  }
+}
