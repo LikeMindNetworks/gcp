@@ -1,3 +1,13 @@
 language: node_js
 node_js:
   - "node"
+cache:
+  directories:
+    - "node_modules"
+install:
+  - npm install -g mocha
+env:
+  - TEST_DIR=gc-pubsub
+  - TEST_DIR=gc-vision
+script:
+  - cd $TEST_DIR && npm install && npm test
