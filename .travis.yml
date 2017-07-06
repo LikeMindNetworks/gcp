@@ -3,7 +3,8 @@ node_js:
   - "node"
 cache:
   directories:
-    - "./*/node_modules"
+    - "./gc-pubsub/node_modules"
+    - "./gc-vision/node_modules"
 install:
   - npm install -g mocha
 env:
