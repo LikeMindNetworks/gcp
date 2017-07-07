@@ -39,6 +39,7 @@ describe('Cloud Function Handler - imageProcessing', function() {
 	};
 
 	before(function() {
+		sinon.stub(vision.prototype, 'constructor').returns({});
 		sinon.stub(vision.prototype, 'detect');
 		vision.prototype.detect.returns(Promise.resolve([results]));
 
