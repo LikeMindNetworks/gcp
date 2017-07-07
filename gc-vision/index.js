@@ -10,9 +10,9 @@ const visionClient = require('@google-cloud/vision')();
  * @param {object} event The Cloud Functions event.
  * @param {object} event.data Message from pubsub.
  * @param {string} event.data.data Message from pubsub NodeJS client in base64.
- * @param {string} event.data(.data).imageUrl Image url to analyze.
- * @param {string} event.data(.data).types Feature types to detect.
- * @param {string} event.data(.data).imageUrl Pubsub topic to publish the results.
+ * @param {string} event.data.data.imageUrl Image url to analyze.
+ * @param {string} event.data.data.types Feature types to detect.
+ * @param {string} event.data.data.publishTopic Pubsub topic to publish the results.
  * @returns {Promise}
  */
 exports.imageProcessing = function imageProcessing(event) {
@@ -35,9 +35,12 @@ exports.imageProcessing = function imageProcessing(event) {
 		);
 	}
 
-	const types = Array.isArray(data.types)
-		? data.types
-		: ['crops', 'text', 'faces', 'labels', 'safeSearch', 'similar'];
+	if (data.types && !(Array.isArray(data.types) && data.types.length)) {
+		return Promise.reject('Types must be a non-empty array.');
+	}
+
+	const types = data.types
+		|| ['crops', 'text', 'faces', 'labels', 'safeSearch', 'similar'];
 
 	return visionClient.detect(data.imageUrl, types)
 		.then(([results]) => {
@@ -45,11 +48,18 @@ exports.imageProcessing = function imageProcessing(event) {
 				pubSubClient.topic(data.publishTopic).get({ autoCreate: true })
 					.then(([topic]) => topic.publish(results))
 					.then(([messageIds]) =>
-						console.log(`Message ${messageIds[0]} published to ${data.publishTopic}.`)
+						log(
+							`Message ${messageIds[0]} published to ${data.publishTopic}.`
+						)
 					);
 			}
 
 			return results;
-		})
-		.catch((err) => Promise.reject(err));
+		});
+};
+
+const log = function() {
+	if (process.env.NODE_ENV !== 'test') {
+		return console.log(...arguments);
+	}
 };

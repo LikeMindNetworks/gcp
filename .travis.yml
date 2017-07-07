@@ -5,10 +5,12 @@ cache:
   directories:
     - "./gc-pubsub/node_modules"
     - "./gc-vision/node_modules"
+    # - "./NEW_PROJECT/node_modules"
 install:
   - npm install -g mocha
 env:
   - TEST_DIR=gc-pubsub
   - TEST_DIR=gc-vision
+  # - TEST_DIR=NEW_PROJECT
 script:
-  - cd $TEST_DIR && npm install && npm test
+  - cd $TEST_DIR && npm install && NODE_ENV=test npm test

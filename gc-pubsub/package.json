@@ -7,7 +7,7 @@
     "start": "node index.js",
     "test": "mocha --recursive ./src/**/*.spec.js"
   },
-  "author": "LikeMindNetworks",
+  "author": "Ying Wei Loke",
   "license": "UNLICENSED",
   "dependencies": {
     "@google-cloud/pubsub": "^0.13.0"
