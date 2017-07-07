@@ -12,13 +12,15 @@ const INVALID_IMAGE_URL = './not-ok.jpg';
 const TEST_TYPES = ['label'];
 const INVALID_TYPE = 'invalidType';
 const TEST_TOPIC = 'testTopic';
+const TEST_MESSAGE_ID = 'testMessageId';
 
 chai.should();
 
 describe('Cloud Function Handler - imageProcessing', function() {
 	const results = { label: ['text'] };
-	const messageId = '12345';
-	const publishSpy = sinon.stub().returns(Promise.resolve([messageId]));
+	const publishSpy = sinon.stub().returns(
+		Promise.resolve([TEST_MESSAGE_ID])
+	);
 
 	const formatPubsubData = (imageUrl, types, publishTopic) => ({
 		data: {
@@ -39,13 +41,10 @@ describe('Cloud Function Handler - imageProcessing', function() {
 	};
 
 	before(function() {
-		sinon.stub(vision.prototype, 'constructor').returns({});
 		sinon.stub(vision.prototype, 'detect');
 		vision.prototype.detect.returns(Promise.resolve([results]));
 
-		sinon.stub(pubsub.prototype, 'constructor').returns({});
 		sinon.stub(pubsub.prototype, 'topic');
-
 		pubsub.prototype.topic.returns({
 			get: () => Promise.resolve([{
 				publish: publishSpy
