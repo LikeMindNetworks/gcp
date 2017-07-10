@@ -41,6 +41,9 @@ describe('Cloud Function Handler - imageProcessing', function() {
 	};
 
 	before(function() {
+		sinon.stub(vision, 'constructor');
+		vision.constructor.returns({});
+
 		sinon.stub(vision.prototype, 'detect');
 		vision.prototype.detect.returns(Promise.resolve([results]));
 
@@ -53,6 +56,7 @@ describe('Cloud Function Handler - imageProcessing', function() {
 	});
 
 	after(() => {
+		vision.constructor.restore();
 		vision.prototype.detect.restore();
 		pubsub.prototype.topic.restore();
 	});
