@@ -18,6 +18,8 @@ const TEST_MESSAGE_ID = 'testMessageId';
 chai.should();
 
 describe('Cloud Function Handler - imageProcessing', function() {
+	// TODO: Handle promise rejection by Google Cloud library
+	// because of no default credentials
 	const publishSpy = sinon.stub().returns(
 		Promise.resolve([TEST_MESSAGE_ID])
 	);
@@ -41,11 +43,6 @@ describe('Cloud Function Handler - imageProcessing', function() {
 	};
 
 	before(function() {
-		sinon.stub(vision, 'constructor');
-		vision.constructor.returns({});
-		sinon.stub(pubsub, 'constructor');
-		pubsub.constructor.returns({});
-
 		sinon.stub(vision.prototype, 'detect');
 		vision.prototype.detect.returns(Promise.resolve([DETECT_RESULTS]));
 
@@ -58,8 +55,6 @@ describe('Cloud Function Handler - imageProcessing', function() {
 	});
 
 	after(() => {
-		vision.constructor.restore();
-		pubsub.constructor.restore();
 		vision.prototype.detect.restore();
 		pubsub.prototype.topic.restore();
 	});
