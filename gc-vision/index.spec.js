@@ -7,6 +7,7 @@ const pubsub = require('@google-cloud/pubsub');
 
 const index = require('./index');
 
+const DETECT_RESULTS = { label: ['text'] };
 const VALID_IMAGE_URL = 'http://ok.jpg';
 const INVALID_IMAGE_URL = './not-ok.jpg';
 const TEST_TYPES = ['label'];
@@ -17,7 +18,6 @@ const TEST_MESSAGE_ID = 'testMessageId';
 chai.should();
 
 describe('Cloud Function Handler - imageProcessing', function() {
-	const results = { label: ['text'] };
 	const publishSpy = sinon.stub().returns(
 		Promise.resolve([TEST_MESSAGE_ID])
 	);
@@ -43,9 +43,11 @@ describe('Cloud Function Handler - imageProcessing', function() {
 	before(function() {
 		sinon.stub(vision, 'constructor');
 		vision.constructor.returns({});
+		sinon.stub(pubsub, 'constructor');
+		pubsub.constructor.returns({});
 
 		sinon.stub(vision.prototype, 'detect');
-		vision.prototype.detect.returns(Promise.resolve([results]));
+		vision.prototype.detect.returns(Promise.resolve([DETECT_RESULTS]));
 
 		sinon.stub(pubsub.prototype, 'topic');
 		pubsub.prototype.topic.returns({
@@ -57,6 +59,7 @@ describe('Cloud Function Handler - imageProcessing', function() {
 
 	after(() => {
 		vision.constructor.restore();
+		pubsub.constructor.restore();
 		vision.prototype.detect.restore();
 		pubsub.prototype.topic.restore();
 	});
@@ -71,11 +74,11 @@ describe('Cloud Function Handler - imageProcessing', function() {
 			.then(resp => {
 				vision.prototype.detect.lastCall.args[1]
 					.should.deep.equal(defaultTypes);
-				resp.should.equal(results);
+				resp.should.equal(DETECT_RESULTS);
 			});
 	});
 
-	it.skip('Invalid image url with relative path', function() {
+	it('Invalid image url with relative path', function() {
 		const dataWithInvalidImageUrl = formatPubsubData(INVALID_IMAGE_URL);
 
 		return index.imageProcessing(dataWithInvalidImageUrl)
@@ -138,7 +141,7 @@ describe('Cloud Function Handler - imageProcessing', function() {
 
 		return index.imageProcessing(validData)
 			.then(resp => {
-				resp.should.equal(results);
+				resp.should.equal(DETECT_RESULTS);
 				vision.prototype.detect.lastCall.args[1]
 					.should.deep.equal(TEST_TYPES);
 				publishSpy.lastCall.calledWith(resp).should.be.true;
