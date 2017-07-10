@@ -75,7 +75,7 @@ describe('Cloud Function Handler - imageProcessing', function() {
 			});
 	});
 
-	it('Invalid image url with relative path', function() {
+	it.skip('Invalid image url with relative path', function() {
 		const dataWithInvalidImageUrl = formatPubsubData(INVALID_IMAGE_URL);
 
 		return index.imageProcessing(dataWithInvalidImageUrl)
