@@ -1,14 +1,14 @@
 'use strict';
 
 // Initialize google cloud pubsub client once
-require('./src/pubsub-client').init({
+require('./pubsub-client').init({
 	projectId: process.env.PROJECT_ID,
 	keyFilename: process.env.KEY_FILENAME
 });
 
-const Publisher = require('./src/publisher');
-const postUpdateSubscriber = require('./src/post-update-subscriber');
-const postUpdate2Subscriber = require('./src/post-update-2-subscriber');
+const Publisher = require('./publisher');
+const postUpdateSubscriber = require('./post-update-subscriber');
+const postUpdate2Subscriber = require('./post-update-2-subscriber');
 
 const subscribers = [postUpdateSubscriber, postUpdate2Subscriber];
 subscribers.forEach((subscriber) => {
