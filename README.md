@@ -1,4 +1,4 @@
-# gcp
+# gcp [![Build Status](https://travis-ci.org/kukikiloke/gcp.svg?branch=master)](https://travis-ci.org/kukikiloke/gcp.svg?branch=master)
 
 ## gc-pubsub
 ### This project shows an example of using Google Cloud Pub/Sub for communication between services, particularly with `gc-vision` project.
